@@ -24,4 +24,10 @@ public interface Board {
      * Get size of the board
      */
     int getSize();
+
+    /**
+     * Get positions taken
+     */
+    int getPositionsTaken();
+
 }

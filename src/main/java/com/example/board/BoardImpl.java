@@ -37,10 +37,10 @@ public class BoardImpl implements Board {
             boolean colWin = true;
 
             for (int j = 0; j < _size; j++) {
-                if (!(_board[i][j] == player.getDisplayName())) {
+                if (!(_board[i][j] == player.getName())) {
                     rowWin = false;
                 }
-                if (!(_board[j][i] == player.getDisplayName())) {
+                if (!(_board[j][i] == player.getName())) {
                     colWin = false;
                 }
             }
@@ -54,10 +54,10 @@ public class BoardImpl implements Board {
         boolean rightDiagonalWin = true;
 
         for (int i = 0; i < _size; i++) {
-            if (!(_board[i][i] == player.getDisplayName())) {
+            if (!(_board[i][i] == player.getName())) {
                 leftDiagonalWin = false;
             }
-            if (!(_board[i][_size - 1 - i] == player.getDisplayName())) {
+            if (!(_board[i][_size - 1 - i] == player.getName())) {
                 rightDiagonalWin = false;
             }
         }
@@ -96,7 +96,7 @@ public class BoardImpl implements Board {
                     if (isTaken(r, c)) {
                         return new ResultImpl(ResultType.SKIP, null);
                     }
-                    _board[r][c] = player.getDisplayName();
+                    _board[r][c] = player.getName();
                     if (isWin(player)) {
                         return new ResultImpl(ResultType.WIN, player);
                     }
@@ -108,12 +108,17 @@ public class BoardImpl implements Board {
         if (isDraw()) {
             return new ResultImpl(ResultType.DRAW, null);
         }
-        return new ResultImpl(ResultType.PROCEED, null);
+        return new ResultImpl(ResultType.NEXT, null);
     }
 
     @Override
     public int getSize() {
         return _size;
+    }
+
+    @Override
+    public int getPositionsTaken() {
+        return _positionsTaken;
     }
 
 }

@@ -5,7 +5,7 @@ import com.example.player.Player;
 public interface Result {
 
     /**
-     * Return Type
+     * Returns Type
      */
     ResultType getType();
 

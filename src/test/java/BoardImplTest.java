@@ -1,10 +1,12 @@
 import com.example.board.BoardImpl;
 import com.example.player.Player;
+import com.example.player.PlayerImpl;
 import com.example.result.Result;
 import com.example.result.ResultType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class BoardImplTest {
 
@@ -25,49 +27,87 @@ public class BoardImplTest {
     }
 
     @Test
-    public void testMoveProceed() {
-        Result result = _testBoard.move(1, Player.X);
+    public void testMoveNext() {
+        Player player1 = new PlayerImpl('X');
+
+        Result next = _testBoard.move(1, player1);
 
         char takenPosition = _testBoard.getBoard()[0][0];
         assertEquals('X', takenPosition, "Incorrect character at position after move");
-        
-        assertEquals(ResultType.PROCEED, result.getType());
-        assertEquals(null, result.getPlayer());
+
+        assertEquals(ResultType.NEXT, next.getType(), "Incorrect result type after move");
+        assertNull(next.getPlayer());
     }
 
     @Test
     public void testMoveSkip() {
-        _testBoard.move(1, Player.X);
-        Result resultSkip = _testBoard.move(1, Player.O);
+        Player player1 = new PlayerImpl('X');
+        Player player2 = new PlayerImpl('O');
 
-        assertEquals(ResultType.SKIP, resultSkip.getType());
-        assertEquals(null, resultSkip.getPlayer());
+        _testBoard.move(1, player1);
+        Result skip = _testBoard.move(1, player2);
+
+        assertEquals(ResultType.SKIP, skip.getType());
+        assertNull(skip.getPlayer());
     }
 
     @Test
     public void testMoveDraw() {
-        _testBoard.move(1, Player.X);
-        _testBoard.move(2, Player.X);
-        _testBoard.move(3, Player.O);
-        _testBoard.move(4, Player.O);
-        _testBoard.move(5, Player.O);
-        _testBoard.move(6, Player.X);
-        _testBoard.move(7, Player.X);
-        _testBoard.move(8, Player.O);
-        Result resultDraw = _testBoard.move(9, Player.X);
+        Player player1 = new PlayerImpl('X');
+        Player player2 = new PlayerImpl('O');
 
-        assertEquals(ResultType.DRAW, resultDraw.getType());
-        assertEquals(null, resultDraw.getPlayer());
+        _testBoard.move(1, player1);
+        _testBoard.move(2, player1);
+        _testBoard.move(3, player2);
+        _testBoard.move(4, player2);
+        _testBoard.move(5, player2);
+        _testBoard.move(6, player1);
+        _testBoard.move(7, player1);
+        _testBoard.move(8, player2);
+        Result draw = _testBoard.move(9, player1);
+
+        assertEquals(9, _testBoard.getPositionsTaken());
+        assertEquals(ResultType.DRAW, draw.getType());
+        assertNull(draw.getPlayer());
     }
 
     @Test
     public void testMoveWin() {
-        _testBoard.move(1, Player.X);
-        _testBoard.move(2, Player.X);
-        Result resultDraw = _testBoard.move(3, Player.X);
+        Player player = new PlayerImpl('X');
 
-        assertEquals(ResultType.WIN, resultDraw.getType());
-        assertEquals(Player.X, resultDraw.getPlayer());
+        _testBoard.move(1, player);
+        _testBoard.move(2, player);
+        Result win = _testBoard.move(3, player);
+
+        assertEquals(ResultType.WIN, win.getType());
+        assertEquals(player, win.getPlayer());
+
+        _testBoard.clear();
+
+        _testBoard.move(1, player);
+        _testBoard.move(4, player);
+        win = _testBoard.move(7, player);
+
+        assertEquals(ResultType.WIN, win.getType());
+        assertEquals(player, win.getPlayer());
+
+        _testBoard.clear();
+
+        _testBoard.move(1, player);
+        _testBoard.move(5, player);
+        win = _testBoard.move(9, player);
+
+        assertEquals(ResultType.WIN, win.getType());
+        assertEquals(player, win.getPlayer());
+
+        _testBoard.clear();
+
+        _testBoard.move(3, player);
+        _testBoard.move(5, player);
+        win = _testBoard.move(7, player);
+
+        assertEquals(ResultType.WIN, win.getType());
+        assertEquals(player, win.getPlayer());
     }
 
     public static class TestBoardImpl extends BoardImpl {
@@ -78,10 +118,6 @@ public class BoardImplTest {
 
         char[][] getBoard() {
             return super._board;
-        }
-
-        int getPositionsTaken() {
-            return super._positionsTaken;
         }
 
     }

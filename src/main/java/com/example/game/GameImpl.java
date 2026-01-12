@@ -5,6 +5,7 @@ import java.util.Scanner;
 import com.example.board.Board;
 import com.example.board.BoardImpl;
 import com.example.player.Player;
+import com.example.player.PlayerImpl;
 import com.example.result.Result;
 
 public class GameImpl implements Game {
@@ -18,14 +19,47 @@ public class GameImpl implements Game {
     // make dynamic number of players (+)
     // TEST EVERYTHING!
 
-    private final Board _board;
+    private final Player[] _players;
     private final Scanner _scanner;
-    private Player _currentPlayer;
+    private final Board _board;
+
+    private static final String YES = "y";
+    private static final String NO = "n";
 
     public GameImpl() {
-        _board = new BoardImpl(3);
-        _currentPlayer = Player.getFirstPlayer();
         _scanner = new Scanner(System.in);
+
+        System.out.print("Number of players: ");
+        _players = new PlayerImpl[_scanner.nextInt()];
+        fill();
+
+        System.out.print("Board size: ");
+        _board = new BoardImpl(_scanner.nextInt());
+    }
+
+    private void fill() {
+        for (int i = 0; i < _players.length; i++) {
+            _players[i] = new PlayerImpl((char) (i + 'A'));
+        }
+    }
+
+    private boolean isRestart() {
+        System.out.print("Do you want to restart? (y/n): ");
+        String answer = _scanner.next();
+
+        switch (answer) {
+            case YES -> {
+                _board.clear();
+                return true;
+            }
+            case NO -> {
+                return false;
+            }
+            default -> {
+                System.out.println("Invalid input. Please type 'y' for yes or 'n' for no.");
+                return isRestart();
+            }
+        }
     }
 
     @Override
@@ -33,41 +67,25 @@ public class GameImpl implements Game {
         while (true) {
             _board.print();
 
-            System.out.printf("Player %s, please make your move (1 to %d): ", _currentPlayer, _board.getSize() * _board.getSize());
+            System.out.printf("Player %s, please make your move (1 to %d): ", _players[_board.getPositionsTaken() % _players.length].getName(), _board.getSize() * _board.getSize());
             int position = _scanner.nextInt();
-            if (position < 0 || position > _board.getSize() * _board.getSize()) {
-                continue;
-            }
+            if (position < 0 || position > _board.getSize() * _board.getSize()) continue;
 
-            Result result = _board.move(position, _currentPlayer);
+            Result result = _board.move(position, _players[_board.getPositionsTaken() % _players.length]);
             switch (result.getType()) {
                 case WIN -> {
-                    System.out.printf("Player %s wins!", result.getPlayer());
+                    _board.print();
+                    System.out.printf("Player %s wins! ", result.getPlayer().getName());
                     if (!isRestart()) return;
                 }
                 case DRAW -> {
-                    System.out.println("It's a draw!");
+                    _board.print();
+                    System.out.print("It's a draw! ");
                     if (!isRestart()) return;
                 }
-                case PROCEED -> _currentPlayer = _currentPlayer.getNextPlayer();
-                case SKIP -> System.out.println("That position is already taken. Please try again.");
+                case NEXT -> {}
+                case SKIP -> System.out.println("Position is already taken. Please try again.");
             }
-        }
-    }
-
-    private boolean isRestart() {
-        System.out.println("Do you want to restart? (y/n): ");
-        String answer = _scanner.next();
-
-        if (answer.equalsIgnoreCase("y")) {
-            _board.clear();
-            _currentPlayer = Player.getFirstPlayer();
-            return true;
-        } else if (answer.equalsIgnoreCase("n")) {
-            return false;
-        } else {
-            System.out.println("Invalid input. Please type 'y' for yes or 'n' for no.");
-            return isRestart();
         }
     }
 
