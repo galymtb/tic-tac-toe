@@ -1,8 +1,7 @@
+package com.example.result;
+
 import com.example.player.Player;
 import com.example.player.PlayerImpl;
-import com.example.result.Result;
-import com.example.result.ResultImpl;
-import com.example.result.ResultType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

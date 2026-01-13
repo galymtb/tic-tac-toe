@@ -1,9 +1,8 @@
 package com.example.game;
 
-import java.util.Scanner;
-
 import com.example.board.Board;
 import com.example.board.BoardImpl;
+import com.example.input.InputSource;
 import com.example.player.Player;
 import com.example.player.PlayerImpl;
 import com.example.result.Result;
@@ -17,24 +16,54 @@ public class GameImpl implements Game {
 
     // make board size dynamic (+)
     // make dynamic number of players (+)
+    // dependency injection
     // TEST EVERYTHING!
 
-    private final Player[] _players;
-    private final Scanner _scanner;
-    private final Board _board;
+    private Player[] _players;
+    private Board _board;
+    private final InputSource _inputSource;
 
     private static final String YES = "y";
     private static final String NO = "n";
 
-    public GameImpl() {
-        _scanner = new Scanner(System.in);
+    public GameImpl(InputSource inputSource) {
+        _inputSource = inputSource;
+    }
 
+    @Override
+    public boolean init() {
+        return initBoard() && initPlayers();
+    }
+
+    private boolean initPlayers() {
         System.out.print("Number of players: ");
-        _players = new PlayerImpl[_scanner.nextInt()];
-        fill();
+        int playersNumber;
+        try {
+            playersNumber = _inputSource.nextInt();
+        } catch (Exception e) {
+            // retry logic?
+            System.out.println("Could not initialize players");
+            return false;
+        }
 
-        System.out.print("Board size: ");
-        _board = new BoardImpl(_scanner.nextInt());
+        _players = new PlayerImpl[playersNumber];
+        fill();
+        return true;
+    }
+
+    private boolean initBoard() {
+        System.out.print("Board size: " );
+        int boardSize;
+        try {
+            boardSize = _inputSource.nextInt();
+        } catch (Exception e) {
+            // retry logic?
+            System.out.println("Could not initialize board");
+            return false;
+        }
+
+        _board = new BoardImpl(boardSize);
+        return true;
     }
 
     private void fill() {
@@ -45,12 +74,12 @@ public class GameImpl implements Game {
 
     private boolean isRestart() {
         System.out.print("Do you want to restart? (y/n): ");
-        String answer = _scanner.next();
+        String answer = _inputSource.next();
 
         switch (answer) {
             case YES -> {
                 _board.clear();
-                return true;
+                return init();
             }
             case NO -> {
                 return false;
@@ -65,28 +94,49 @@ public class GameImpl implements Game {
     @Override
     public void start() {
         while (true) {
-            _board.print();
-
-            System.out.printf("Player %s, please make your move (1 to %d): ", _players[_board.getPositionsTaken() % _players.length].getName(), _board.getSize() * _board.getSize());
-            int position = _scanner.nextInt();
-            if (position < 0 || position > _board.getSize() * _board.getSize()) continue;
-
-            Result result = _board.move(position, _players[_board.getPositionsTaken() % _players.length]);
-            switch (result.getType()) {
-                case WIN -> {
-                    _board.print();
-                    System.out.printf("Player %s wins! ", result.getPlayer().getName());
-                    if (!isRestart()) return;
-                }
-                case DRAW -> {
-                    _board.print();
-                    System.out.print("It's a draw! ");
-                    if (!isRestart()) return;
-                }
-                case NEXT -> {}
-                case SKIP -> System.out.println("Position is already taken. Please try again.");
+            if (!iterate()) {
+                break;
             }
         }
+    }
+
+    boolean iterate() {
+        int idx = _board.getPositionsTaken() % _players.length;
+        int area = _board.getSize() * _board.getSize();
+
+        _board.print();
+
+        System.out.printf("Player %s, please make your move (1 to %d): ", _players[idx].getName(), area);
+
+        int position;
+        try {
+            position = _inputSource.nextInt();
+        } catch (Exception e) {
+            System.out.println("Input digit, idiot!");
+            return true;
+        }
+
+        if (position <= 0 || position > area) {
+            return true;
+        }
+
+        Result result = _board.move(position, _players[idx]);
+        switch (result.getType()) {
+            case WIN -> {
+                _board.print();
+                System.out.printf("Player %s wins! ", result.getPlayer().getName());
+                return isRestart();
+            }
+            case DRAW -> {
+                _board.print();
+                System.out.print("It's a draw! ");
+                return isRestart();
+            }
+            case NEXT -> {}
+            case SKIP -> System.out.println("Position is already taken. Please try again.");
+        }
+        return true;
+
     }
 
 }

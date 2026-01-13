@@ -3,7 +3,12 @@ package com.example.game;
 public interface Game {
 
     /**
-     * Starts the game
+     * Initializes game
+     */
+    boolean init();
+
+    /**
+     * Starts game
      */
     void start();
 

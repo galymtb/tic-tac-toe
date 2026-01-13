@@ -1,4 +1,5 @@
-import com.example.board.BoardImpl;
+package com.example.board;
+
 import com.example.player.Player;
 import com.example.player.PlayerImpl;
 import com.example.result.Result;

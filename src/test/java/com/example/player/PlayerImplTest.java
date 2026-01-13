@@ -1,5 +1,5 @@
-import com.example.player.Player;
-import com.example.player.PlayerImpl;
+package com.example.player;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -8,7 +8,6 @@ public class PlayerImpl implements Player{
         _name = name;
     }
 
-
     @Override
     public char getName() {
         return _name;
