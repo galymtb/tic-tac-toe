@@ -6,7 +6,10 @@ import java.util.Queue;
 import com.example.input.InputSource;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GameImplTest {
 
@@ -21,10 +24,73 @@ public class GameImplTest {
     @Test
     public void testInitialization() {
         _inputSource.addNextIntInput(3);
-        _inputSource.addNextThrowingIntInput();
+        _inputSource.addNextIntInput(3);
         _game.init();
 
         assertNotNull(_game);
+    }
+
+    @Test
+    public void testIteration() {
+        // Initialize
+        _inputSource.addNextIntInput(3);
+        _inputSource.addNextIntInput(3);
+        _game.init();
+
+        // Check position is between 1 and 9
+        _inputSource.addNextIntInput(0);
+        assertTrue(_game.iterate());
+        _inputSource.addNextIntInput(10);
+        assertTrue(_game.iterate());
+
+        // Make move
+        _inputSource.addNextIntInput(1);
+        assertTrue(_game.iterate());
+
+        // Input non-digit
+        _inputSource.addNextStringInput("1");
+        assertTrue(_game.iterate());
+
+        // Check for restart
+        _inputSource.addNextIntInput(2);
+        _game.iterate();
+        _inputSource.addNextIntInput(3);
+        _game.iterate();
+        _inputSource.addNextIntInput(4);
+        _game.iterate();
+        _inputSource.addNextIntInput(5);
+        _game.iterate();
+        _inputSource.addNextIntInput(6);
+        _game.iterate();
+        _inputSource.addNextIntInput(7);
+        _inputSource.addNextStringInput("1");
+        _inputSource.addNextStringInput("y");
+        _inputSource.addNextIntInput(3);
+        _inputSource.addNextIntInput(3);
+        assertTrue(_game.iterate());
+
+        // Check for shutdown
+        _inputSource.addNextIntInput(1);
+        _game.iterate();
+        _inputSource.addNextIntInput(1);
+        _game.iterate();
+        _inputSource.addNextIntInput(2);
+        _game.iterate();
+        _inputSource.addNextIntInput(3);
+        _game.iterate();
+        _inputSource.addNextIntInput(4);
+        _game.iterate();
+        _inputSource.addNextIntInput(5);
+        _game.iterate();
+        _inputSource.addNextIntInput(6);
+        _game.iterate();
+        _inputSource.addNextIntInput(9);
+        _game.iterate();
+        _inputSource.addNextIntInput(7);
+        _game.iterate();
+        _inputSource.addNextIntInput(8);
+        _inputSource.addNextStringInput("n");
+        assertFalse(_game.iterate());
     }
 
     static class TestInputSource implements InputSource {

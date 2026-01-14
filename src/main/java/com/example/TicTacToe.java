@@ -1,17 +1,14 @@
 package com.example;
 
-import java.util.Scanner;
-
 import com.example.game.Game;
-import com.example.game.GameImpl;
-import com.example.input.InputSourceConsole;
-import com.example.input.InputSource;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
 public class TicTacToe {
 
     public static void main(String[] args) {
-        InputSource inputSource = new InputSourceConsole(new Scanner(System.in));
-        Game game = new GameImpl(inputSource);
+        Injector injector = Guice.createInjector(new GameModule());
+        Game game = injector.getInstance(Game.class);
         if (game.init()) {
             game.start();
         }

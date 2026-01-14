@@ -6,7 +6,10 @@ import com.example.input.InputSource;
 import com.example.player.Player;
 import com.example.player.PlayerImpl;
 import com.example.result.Result;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class GameImpl implements Game {
 
     // TODO:
@@ -26,6 +29,7 @@ public class GameImpl implements Game {
     private static final String YES = "y";
     private static final String NO = "n";
 
+    @Inject
     public GameImpl(InputSource inputSource) {
         _inputSource = inputSource;
     }
@@ -101,6 +105,7 @@ public class GameImpl implements Game {
     }
 
     boolean iterate() {
+
         int idx = _board.getPositionsTaken() % _players.length;
         int area = _board.getSize() * _board.getSize();
 
