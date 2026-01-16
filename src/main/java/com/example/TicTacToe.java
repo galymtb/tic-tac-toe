@@ -6,8 +6,9 @@ import com.google.inject.Injector;
 
 public class TicTacToe {
 
+    private static final Injector injector = Guice.createInjector(new GameModule());
+
     public static void main(String[] args) {
-        Injector injector = Guice.createInjector(new GameModule());
         Game game = injector.getInstance(Game.class);
         if (game.init()) {
             game.start();

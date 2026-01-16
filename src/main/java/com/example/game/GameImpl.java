@@ -6,30 +6,29 @@ import com.example.input.InputSource;
 import com.example.player.Player;
 import com.example.player.PlayerImpl;
 import com.example.result.Result;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Singleton
 public class GameImpl implements Game {
 
     // TODO:
     // make user to trigger another game (+)
     // make game 9x9 (+)
     // add another player (3 players) (+)
-
     // make board size dynamic (+)
     // make dynamic number of players (+)
-    // dependency injection
+    // dependency injection (+)
+    // logger (logback) (+)
     // TEST EVERYTHING!
 
+    private final InputSource _inputSource;
+    private static final Logger _logger = LoggerFactory.getLogger(GameImpl.class);
     private Player[] _players;
     private Board _board;
-    private final InputSource _inputSource;
 
     private static final String YES = "y";
     private static final String NO = "n";
 
-    @Inject
     public GameImpl(InputSource inputSource) {
         _inputSource = inputSource;
     }
@@ -40,34 +39,29 @@ public class GameImpl implements Game {
     }
 
     private boolean initPlayers() {
-        System.out.print("Number of players: ");
-        int playersNumber;
-        try {
-            playersNumber = _inputSource.nextInt();
-        } catch (Exception e) {
-            // retry logic?
-            System.out.println("Could not initialize players");
-            return false;
-        }
-
+        _logger.info("Number of players: ");
+        int playersNumber = getValidInt();
         _players = new PlayerImpl[playersNumber];
         fill();
         return true;
     }
 
     private boolean initBoard() {
-        System.out.print("Board size: " );
-        int boardSize;
-        try {
-            boardSize = _inputSource.nextInt();
-        } catch (Exception e) {
-            // retry logic?
-            System.out.println("Could not initialize board");
-            return false;
-        }
-
+        _logger.info("Board size: " );
+        int boardSize = getValidInt();
         _board = new BoardImpl(boardSize);
         return true;
+    }
+
+    private int getValidInt() {
+        while (true) {
+            try {
+                return _inputSource.nextInt();
+            } catch (Exception  e) {
+                _logger.error("Input digit, idiot!");
+                _inputSource.next();
+            }
+        }
     }
 
     private void fill() {
@@ -77,7 +71,7 @@ public class GameImpl implements Game {
     }
 
     private boolean isRestart() {
-        System.out.print("Do you want to restart? (y/n): ");
+        _logger.info("Do you want to restart? (y/n): ");
         String answer = _inputSource.next();
 
         switch (answer) {
@@ -89,7 +83,7 @@ public class GameImpl implements Game {
                 return false;
             }
             default -> {
-                System.out.println("Invalid input. Please type 'y' for yes or 'n' for no.");
+                _logger.error("Invalid input. Please type 'y' for yes or 'n' for no.");
                 return isRestart();
             }
         }
@@ -111,15 +105,9 @@ public class GameImpl implements Game {
 
         _board.print();
 
-        System.out.printf("Player %s, please make your move (1 to %d): ", _players[idx].getName(), area);
+        _logger.info("Player {}, please make your move (1 to {}): ", _players[idx].getName(), area);
 
-        int position;
-        try {
-            position = _inputSource.nextInt();
-        } catch (Exception e) {
-            System.out.println("Input digit, idiot!");
-            return true;
-        }
+        int position = getValidInt();
 
         if (position <= 0 || position > area) {
             return true;
@@ -129,16 +117,16 @@ public class GameImpl implements Game {
         switch (result.getType()) {
             case WIN -> {
                 _board.print();
-                System.out.printf("Player %s wins! ", result.getPlayer().getName());
+                _logger.info("Player {} wins! ", result.getPlayer().getName());
                 return isRestart();
             }
             case DRAW -> {
                 _board.print();
-                System.out.print("It's a draw! ");
+                _logger.info("It's a draw! ");
                 return isRestart();
             }
             case NEXT -> {}
-            case SKIP -> System.out.println("Position is already taken. Please try again.");
+            case SKIP -> _logger.info("Position is already taken. Please try again.");
         }
         return true;
 
