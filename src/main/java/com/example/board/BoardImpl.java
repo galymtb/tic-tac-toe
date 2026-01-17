@@ -7,6 +7,8 @@ import com.example.result.ResultType;
 
 public class BoardImpl implements Board {
 
+    private static final char EMPTY_CELL = ' ';
+
     protected final char[][] _board;
     protected int _positionsTaken;
     protected int _size;
@@ -21,13 +23,13 @@ public class BoardImpl implements Board {
     private void fill() {
         for (int r = 0; r < _size; r++) {
             for (int c = 0; c < _size; c++) {
-                _board[r][c] = ' ';
+                _board[r][c] = EMPTY_CELL;
             }
         }
     }
 
     private boolean isTaken(int row, int col) {
-        return (_board[row][col] != ' ');
+        return (_board[row][col] != EMPTY_CELL);
     }
 
     private boolean isWin(Player player) {

@@ -109,6 +109,8 @@ public class BoardImplTest {
 
         assertEquals(ResultType.WIN, win.getType());
         assertEquals(player, win.getPlayer());
+
+        _testBoard.print();
     }
 
     public static class TestBoardImpl extends BoardImpl {

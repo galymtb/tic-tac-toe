@@ -48,12 +48,11 @@ public class GameImplTest {
         assertTrue(_game.iterate());
 
         // Input non-digit
-        _inputSource.addNextStringInput("1");
+        _inputSource.addNextStringInput("a");
+        _inputSource.addNextIntInput(2);
         assertTrue(_game.iterate());
 
         // Check for restart
-        _inputSource.addNextIntInput(2);
-        _game.iterate();
         _inputSource.addNextIntInput(3);
         _game.iterate();
         _inputSource.addNextIntInput(4);
@@ -98,7 +97,6 @@ public class GameImplTest {
         private final Queue<IntInput> _nextIntInputs = new LinkedList<>();
         private final Queue<StringInput> _nextStringInputs = new LinkedList<>();
 
-
         @Override
         public String next() {
             return _nextStringInputs.poll().getValue();
@@ -117,40 +115,12 @@ public class GameImplTest {
             _nextIntInputs.add(new IntInput(nextIntInput));
         }
 
-        void addNextThrowingIntInput() {
-            _nextIntInputs.add(new ThrowingIntInput());
-        }
-
         void addNextThrowingStringInput() {
             _nextStringInputs.add(new ThrowingStringInput());
         }
 
-        static class ThrowingIntInput extends IntInput {
-
-            ThrowingIntInput() {
-                super(0);
-            }
-
-            @Override
-            public Integer getValue() {
-                throw new RuntimeException("Test exception!");
-            }
-        }
-
-
-        static class IntInput implements Input<Integer> {
-
-            private final int _input;
-
-            IntInput(int input) {
-                _input = input;
-            }
-
-            @Override
-            public Integer getValue() {
-                return _input;
-            }
-
+        void addNextThrowingIntInput() {
+            _nextIntInputs.add(new ThrowingIntInput());
         }
 
         static class ThrowingStringInput extends StringInput {
@@ -178,6 +148,33 @@ public class GameImplTest {
             public String getValue() {
                 return _input;
             }
+        }
+
+        static class ThrowingIntInput extends IntInput {
+
+            ThrowingIntInput() {
+                super(0);
+            }
+            @Override
+            public Integer getValue() {
+                throw new RuntimeException("Test exception!");
+            }
+
+        }
+
+        static class IntInput implements Input<Integer> {
+
+            private final int _input;
+
+            IntInput(int input) {
+                _input = input;
+            }
+
+            @Override
+            public Integer getValue() {
+                return _input;
+            }
+
         }
 
         interface Input<T> {

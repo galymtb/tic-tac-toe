@@ -21,13 +21,13 @@ public class GameImpl implements Game {
     // logger (logback) (+)
     // TEST EVERYTHING!
 
-    private final InputSource _inputSource;
     private static final Logger _logger = LoggerFactory.getLogger(GameImpl.class);
-    private Player[] _players;
-    private Board _board;
-
     private static final String YES = "y";
     private static final String NO = "n";
+
+    private final InputSource _inputSource;
+    private Player[] _players;
+    private Board _board;
 
     public GameImpl(InputSource inputSource) {
         _inputSource = inputSource;
@@ -91,11 +91,7 @@ public class GameImpl implements Game {
 
     @Override
     public void start() {
-        while (true) {
-            if (!iterate()) {
-                break;
-            }
-        }
+        while (iterate());
     }
 
     boolean iterate() {
@@ -122,7 +118,7 @@ public class GameImpl implements Game {
             }
             case DRAW -> {
                 _board.print();
-                _logger.info("It's a draw! ");
+                _logger.info("It's a draw!");
                 return isRestart();
             }
             case NEXT -> {}
