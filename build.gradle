@@ -13,7 +13,9 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation("com.google.inject:guice:7.0.0")
-    implementation("ch.qos.logback:logback-classic:1.5.2")
+    implementation('org.eclipse.jetty:jetty-server:11.0.0')
+    implementation('org.eclipse.jetty:jetty-servlet:11.0.0')
+    implementation("ch.qos.logback:logback-classic:1.5.0")
 }
 
 test {

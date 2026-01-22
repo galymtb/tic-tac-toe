@@ -11,19 +11,12 @@ import org.slf4j.LoggerFactory;
 
 public class GameImpl implements Game {
 
-    // TODO:
-    // make user to trigger another game (+)
-    // make game 9x9 (+)
-    // add another player (3 players) (+)
-    // make board size dynamic (+)
-    // make dynamic number of players (+)
-    // dependency injection (+)
-    // logger (logback) (+)
-    // TEST EVERYTHING!
-
     private static final Logger _logger = LoggerFactory.getLogger(GameImpl.class);
     private static final String YES = "y";
     private static final String NO = "n";
+
+    // Preload all static (for performance)
+    // public static void load() {}
 
     private final InputSource _inputSource;
     private Player[] _players;
