@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+<div>
+    <label>Message: <input id="msg" type="text" value="Hello" /></label>
+    <button id="send">Send</button>
+    <button id="open">Open</button>
+    <button id="close">Close</button>
+</div>
+<div id="log"></div>
+
+<script>
+    let ws;
+    const logEl = document.getElementById('log');
+    const append = (s) => { logEl.textContent += s + '\n'; logEl.scrollTop = logEl.scrollHeight; };
+
+    document.getElementById('open').addEventListener('click', () => {
+      if (ws && ws.readyState === WebSocket.OPEN) { append('Already open'); return; }
+      const url = 'ws://localhost:5000/ws/hello';
+      ws = new WebSocket(url);
+      ws.onopen = () => append('Connected to ' + url);
+    });
+
+    document.getElementById('send').addEventListener('click', () => {
+      const m = document.getElementById('msg').value;
+      if (!ws || ws.readyState !== WebSocket.OPEN) { append('WebSocket not open'); return; }
+      append('Send: ' + m);
+      ws.send(m);
+      ws.onmessage = (ev) => append('Recv: ' + ev.data);
+    });
+
+    document.getElementById('close').addEventListener('click', () => {
+      if (ws) ws.close();
+    });
+</script>
+</body>
+</html>

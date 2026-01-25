@@ -1,7 +1,7 @@
 package com.example;
 
-import com.example.server.rest.RestServer;
 import com.example.game.Game;
+import com.example.server.BaseServer;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
@@ -16,11 +16,11 @@ public class TicTacToe {
     // dependency injection (+)
     // logger (logback) (+)
     // Jetty API Endpoints (+)
-    // WebSockets (running in parallel with REST)
-    // Test Endpoints
-    // Logger formatting
-    // Dockerize
-    // Configuration (PORT, ENDPOINT PATHS)
+    // Test Endpoints (+)
+    // WebSockets (running in parallel with REST) (+)
+    // Logger formatting (+)
+    // Configuration (PORT, ENDPOINT PATHS) (+)
+    // Dockerize (+)
 
     // TEST EVERYTHING!
 
@@ -28,8 +28,7 @@ public class TicTacToe {
 
     public static void main(String[] args) {
         Game game = _injector.getInstance(Game.class);
-        RestServer server = _injector.getInstance(RestServer.class);
-
+        BaseServer server = _injector.getInstance(BaseServer.class);
         try {
             server.start();
         } catch (Exception ignore) {

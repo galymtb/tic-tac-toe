@@ -1,21 +1,47 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
-group = 'com.example'
-version = '1.0-SNAPSHOT'
+jar.enabled = false
 
-repositories {
-    mavenCentral()
+allprojects {
+
+    group = "com.example"
+    version = "1.0.0"
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(libs.versions.java.get())
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    implementation("com.google.inject:guice:7.0.0")
-    implementation('org.eclipse.jetty:jetty-server:11.0.0')
-    implementation('org.eclipse.jetty:jetty-servlet:11.0.0')
-    implementation("ch.qos.logback:logback-classic:1.5.0")
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            html.required = true
+        }
+    }
+
+    dependencies {
+        implementation libs.google.guice
+        implementation libs.logback
+        testImplementation libs.bundles.test.implementation
+        testRuntimeOnly libs.bundles.test.runtime
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
 
 test {

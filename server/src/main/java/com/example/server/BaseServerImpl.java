@@ -1,4 +1,4 @@
-package com.example.server.rest;
+package com.example.server;
 
 import jakarta.servlet.http.HttpServlet;
 import org.eclipse.jetty.server.Server;
@@ -7,20 +7,20 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RestServerImpl implements RestServer {
+public class BaseServerImpl implements BaseServer{
 
-    private final Logger _log = LoggerFactory.getLogger(RestServerImpl.class);
+    private final Logger _log = LoggerFactory.getLogger(BaseServerImpl.class);
 
     private final Server _server;
     private final ServletContextHandler _context;
 
-    public RestServerImpl(Server server, ServletContextHandler context) {
+    public BaseServerImpl(Server server, ServletContextHandler context) {
         _server = server;
         _context = context;
     }
 
     @Override
-    public void start() {
+    public void start() throws Exception {
         try {
             _server.start();
             _server.join();
