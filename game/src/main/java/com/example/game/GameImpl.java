@@ -2,7 +2,6 @@ package com.example.game;
 
 import com.example.board.Board;
 import com.example.board.BoardImpl;
-import com.example.input.InputSource;
 import com.example.player.Player;
 import com.example.player.PlayerImpl;
 import com.example.result.Result;
@@ -12,49 +11,38 @@ import org.slf4j.LoggerFactory;
 public class GameImpl implements Game {
 
     private static final Logger _logger = LoggerFactory.getLogger(GameImpl.class);
-    private static final String YES = "y";
-    private static final String NO = "n";
 
     // Preload all static (for performance)
     // public static void load() {}
 
-    private final InputSource _inputSource;
     private Player[] _players;
     private Board _board;
+    private boolean _isGameOver = false;
 
-    public GameImpl(InputSource inputSource) {
-        _inputSource = inputSource;
+    public GameImpl() {
     }
 
     @Override
-    public boolean init() {
-        return initBoard() && initPlayers();
+    public void init(int boardSize) {
+        initPlayers();
+        initBoard(boardSize);
+        _board.clear();
+        _board.print();
+        _logger.info("Player {}, please send position to /step (1 to {}): ",
+                _players[_board.getPositionsTaken() % _players.length].getName(),
+                _board.getArea());
     }
 
-    private boolean initPlayers() {
-        _logger.info("Number of players: ");
-        int playersNumber = getValidInt();
+    private void initPlayers() {
+        int playersNumber = 2;
+        _logger.info("Number of players: {}", playersNumber);
         _players = new PlayerImpl[playersNumber];
         fill();
-        return true;
     }
 
-    private boolean initBoard() {
-        _logger.info("Board size: " );
-        int boardSize = getValidInt();
+    private void initBoard(int boardSize) {
+        _logger.info("Board size: {}", boardSize);
         _board = new BoardImpl(boardSize);
-        return true;
-    }
-
-    private int getValidInt() {
-        while (true) {
-            try {
-                return _inputSource.nextInt();
-            } catch (Exception  e) {
-                _logger.error("Input digit, idiot!");
-                _inputSource.next();
-            }
-        }
     }
 
     private void fill() {
@@ -63,62 +51,32 @@ public class GameImpl implements Game {
         }
     }
 
-    private boolean isRestart() {
-        _logger.info("Do you want to restart? (y/n): ");
-        String answer = _inputSource.next();
-
-        switch (answer) {
-            case YES -> {
-                _board.clear();
-                return init();
-            }
-            case NO -> {
-                return false;
-            }
-            default -> {
-                _logger.error("Invalid input. Please type 'y' for yes or 'n' for no.");
-                return isRestart();
-            }
+    public void step(int position) {
+        if (_isGameOver) {
+            _logger.warn("Game is finished! Please restart the game using /init");
+            return;
         }
-    }
-
-    @Override
-    public void start() {
-        while (iterate());
-    }
-
-    boolean iterate() {
-
-        int idx = _board.getPositionsTaken() % _players.length;
-        int area = _board.getSize() * _board.getSize();
-
+        if (position <= 0 || position > _board.getArea()) {
+            _logger.info("Wrong input. Try again.");
+            return;
+        }
+        Result result = _board.move(position, _players[_board.getPositionsTaken() % _players.length]);
         _board.print();
-
-        _logger.info("Player {}, please make your move (1 to {}): ", _players[idx].getName(), area);
-
-        int position = getValidInt();
-
-        if (position <= 0 || position > area) {
-            return true;
-        }
-
-        Result result = _board.move(position, _players[idx]);
         switch (result.getType()) {
             case WIN -> {
-                _board.print();
-                _logger.info("Player {} wins! ", result.getPlayer().getName());
-                return isRestart();
+                _logger.info("Player {} won! Please restart the game using /init", result.getPlayer().getName());
+                _isGameOver = true;
             }
             case DRAW -> {
-                _board.print();
-                _logger.info("It's a draw!");
-                return isRestart();
+                _logger.info("Draw! Please restart the game using /init");
+                _isGameOver = true;
             }
-            case NEXT -> {}
-            case SKIP -> _logger.info("Position is already taken. Please try again.");
+            case NEXT -> _logger.info("Player {}, please send position to /step (1 to {}): ",
+                    _players[_board.getPositionsTaken() % _players.length].getName(),
+                    _board.getArea());
+            case SKIP -> _logger.info("Position is taken. Try again.");
         }
-        return true;
-
     }
 
 }
+

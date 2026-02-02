@@ -23,8 +23,8 @@ public class BaseServerImpl implements BaseServer{
     public void start() throws Exception {
         try {
             _server.start();
+            _log.info("Server has started successfully! Send boardSize to /init for initializing the game");
             _server.join();
-            _log.info("Server has started successfully!");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

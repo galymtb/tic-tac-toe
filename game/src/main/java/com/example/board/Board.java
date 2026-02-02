@@ -23,7 +23,7 @@ public interface Board {
     /**
      * Get size of the board
      */
-    int getSize();
+    int getArea();
 
     /**
      * Get positions taken

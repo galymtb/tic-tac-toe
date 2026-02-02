@@ -18,7 +18,7 @@
 
     document.getElementById('open').addEventListener('click', () => {
       if (ws && ws.readyState === WebSocket.OPEN) { append('Already open'); return; }
-      const url = 'ws://localhost:5000/ws/hello';
+      const url = 'ws://localhost:5000/ws/game';
       ws = new WebSocket(url);
       ws.onopen = () => append('Connected to ' + url);
     });

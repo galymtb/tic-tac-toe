@@ -2,16 +2,23 @@ package com.example.server.rest.endpoints;
 
 import java.io.IOException;
 
-import com.example.server.BaseServerImpl;
+import com.example.game.Game;
+import com.example.game.GameImpl;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HelloEndpoint extends HttpServlet {
+public class InitEndpoint extends HttpServlet {
 
-    private static final Logger _log = LoggerFactory.getLogger(HelloEndpoint.class);
+    private static final Logger _log = LoggerFactory.getLogger(InitEndpoint.class);
+
+    private static Game _game;
+
+    public InitEndpoint(Game game) {
+        _game = game;
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -30,6 +37,14 @@ public class HelloEndpoint extends HttpServlet {
         _log.debug("response: status = {}, body = {}",
                 response.getStatus(),
                 jsonResponse);
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int boardSize = Integer.parseInt(request.getParameter("boardSize"));
+        _game.init(boardSize);
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
 }

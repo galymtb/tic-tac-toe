@@ -1,7 +1,7 @@
 [versions]
 java = "17"
 junit = "5.12.2"
-logback = "1.5.13"
+logback = "1.5.0"
 google-guice = "7.0.0"
 jetty = "11.0.0"
 

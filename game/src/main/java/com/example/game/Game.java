@@ -5,11 +5,11 @@ public interface Game {
     /**
      * Initializes game
      */
-    boolean init();
+    void init(int boardSize);
 
     /**
      * Starts game
      */
-    void start();
+    void step(int position);
 
 }

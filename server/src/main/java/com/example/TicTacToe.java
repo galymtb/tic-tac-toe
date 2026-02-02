@@ -21,21 +21,20 @@ public class TicTacToe {
     // Logger formatting (+)
     // Configuration (PORT, ENDPOINT PATHS) (+)
     // Dockerize (+)
+    // Shadow Containerization (fat jar) (+)
+    // Integration tests (+)
+    // Request, response models
+    // New APIs (REST and WS) (+)
 
     // TEST EVERYTHING!
 
     private static final Injector _injector = Guice.createInjector(new GameModule());
 
     public static void main(String[] args) {
-        Game game = _injector.getInstance(Game.class);
         BaseServer server = _injector.getInstance(BaseServer.class);
         try {
             server.start();
         } catch (Exception ignore) {
-        }
-
-        if (game.init()) {
-            game.start();
         }
     }
 

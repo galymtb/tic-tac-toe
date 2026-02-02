@@ -6,11 +6,10 @@ import java.util.Scanner;
 
 import com.example.server.BaseServer;
 import com.example.server.BaseServerImpl;
-import com.example.server.rest.endpoints.HelloEndpoint;
+import com.example.server.rest.endpoints.InitEndpoint;
 import com.example.game.Game;
 import com.example.game.GameImpl;
-import com.example.input.InputSource;
-import com.example.input.InputSourceConsole;
+import com.example.server.rest.endpoints.StepEndpoint;
 import com.example.server.ws.websockets.HelloWebSocket;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
@@ -37,22 +36,8 @@ public class GameModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public Scanner provideScanner() {
-        return new Scanner(System.in);
-    }
-
-    @Provides
-    @Singleton
-    @Inject
-    public InputSource getInputSource(Scanner scanner) {
-        return new InputSourceConsole(scanner);
-    }
-
-    @Provides
-    @Singleton
-    @Inject
-    public Game getGame(InputSource inputSource) {
-        return new GameImpl(inputSource);
+    public Game getGame() {
+        return new GameImpl();
     }
 
     @Provides
@@ -73,14 +58,15 @@ public class GameModule extends AbstractModule {
     @Provides
     @Singleton
     @Inject
-    public BaseServer getServer(Server jettyServer, ServletContextHandler context, @Named("REST_API_PATH") String restPath, @Named("WS_PATH") String wsPath) {
+    public BaseServer getServer(Server jettyServer, ServletContextHandler context, Game game, @Named("REST_API_PATH") String restPath, @Named("WS_PATH") String wsPath) {
         BaseServer server = new BaseServerImpl(jettyServer, context);
         // REST
-        server.addEndpoint(new HelloEndpoint(), restPath);
+        server.addEndpoint(new InitEndpoint(game), restPath + "/init");
+        server.addEndpoint(new StepEndpoint(game), restPath + "/step");
 
         // WS
         JettyWebSocketServletContainerInitializer.configure(context, null);
-        server.addEndpoint(new HelloWebSocket(), wsPath);
+        server.addEndpoint(new HelloWebSocket(game), wsPath);
         return server;
     }
 

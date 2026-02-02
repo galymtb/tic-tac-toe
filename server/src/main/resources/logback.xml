@@ -10,8 +10,8 @@
     <logger name="org.eclipse.jetty.server.AbstractConnector" level="INFO"/>
 
 <!--    <logger name="org.eclipse.jetty.server.HttpChannel" level="DEBUG"/>-->
-    <logger name="com.example.server.rest.endpoints.HelloEndpoint" level="DEBUG"/>
-    <logger name="com.example.server.ws.websockets.HelloWebSocket" level="DEBUG"/>
+    <logger name="com.example.server.rest.endpoints.InitEndpoint" level="INFO"/>
+    <logger name="com.example.server.ws.websockets.HelloWebSocket" level="INFO"/>
 
     <!-- Suppress other Jetty logs -->
     <logger name="org.eclipse.jetty" level="WARN"/>

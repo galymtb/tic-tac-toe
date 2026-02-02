@@ -114,8 +114,8 @@ public class BoardImpl implements Board {
     }
 
     @Override
-    public int getSize() {
-        return _size;
+    public int getArea() {
+        return _size *  _size;
     }
 
     @Override

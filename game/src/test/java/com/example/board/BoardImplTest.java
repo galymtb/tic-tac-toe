@@ -20,8 +20,9 @@ public class BoardImplTest {
     @Test
     public void testInitialization() {
         char[][] board = _testBoard.getBoard();
-        for (int r = 0; r < _testBoard.getSize(); r++) {
-            for (int c = 0; c < _testBoard.getSize(); c++) {
+        int size = board.length;
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
                 assertEquals(' ', board[r][c]);
             }
         }
