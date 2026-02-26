@@ -7,4 +7,8 @@ public interface Player {
      */
     char getName();
 
+    /**
+     * Gets type of the player
+     */
+    PlayerType getType();
 }

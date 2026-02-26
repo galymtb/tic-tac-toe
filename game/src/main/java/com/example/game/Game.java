@@ -1,15 +1,28 @@
 package com.example.game;
 
+import com.example.board.BoardMark;
+import com.example.player.PlayerType;
+
 public interface Game {
 
     /**
      * Initializes game
      */
-    void init(int boardSize);
+    GameState init(int boardSize, BoardMark boardMark, PlayerType playerType);
 
     /**
-     * Starts game
+     * Makes step
      */
-    void step(int position);
+    GameState step(int position, PlayerType playerType);
+
+    /**
+     * Restarts game
+     */
+    GameState restart(int boardSize, BoardMark boardMark, PlayerType playerType);
+
+    /**
+     * Gets status
+     */
+    GameState status();
 
 }

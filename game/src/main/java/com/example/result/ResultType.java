@@ -4,5 +4,6 @@ public enum ResultType {
     WIN,
     DRAW,
     NEXT,
-    SKIP
+    SKIP,
+    ERROR
 }

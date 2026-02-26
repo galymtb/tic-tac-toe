@@ -5,12 +5,12 @@ import com.example.player.Player;
 public interface Result {
 
     /**
-     * Returns Type
+     * Returns Type of the Result
      */
     ResultType getType();
 
     /**
-     * Returns Player
+     * Returns Player of the Result
      */
     Player getPlayer();
 

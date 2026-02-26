@@ -2,7 +2,7 @@ FROM amazoncorretto:17
 
 WORKDIR /app
 
-COPY /server/build/libs/server-1.0.0.jar server.jar
+COPY /server/build/libs/server-1.0.0-all.jar server.jar
 
 EXPOSE 5000
 

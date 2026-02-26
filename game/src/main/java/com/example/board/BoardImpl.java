@@ -7,8 +7,6 @@ import com.example.result.ResultType;
 
 public class BoardImpl implements Board {
 
-    private static final char EMPTY_CELL = ' ';
-
     protected final char[][] _board;
     protected int _positionsTaken;
     protected int _size;
@@ -23,17 +21,16 @@ public class BoardImpl implements Board {
     private void fill() {
         for (int r = 0; r < _size; r++) {
             for (int c = 0; c < _size; c++) {
-                _board[r][c] = EMPTY_CELL;
+                _board[r][c] = BoardMark.EMPTY.getValue();
             }
         }
     }
 
     private boolean isTaken(int row, int col) {
-        return (_board[row][col] != EMPTY_CELL);
+        return _board[row][col] != BoardMark.EMPTY.getValue();
     }
 
     private boolean isWin(Player player) {
-
         for (int i = 0; i < _size; i++) {
             boolean rowWin = true;
             boolean colWin = true;
@@ -65,29 +62,10 @@ public class BoardImpl implements Board {
         }
 
         return leftDiagonalWin || rightDiagonalWin;
-
     }
 
     private boolean isDraw() {
-        return _positionsTaken == _size * _size;
-    }
-
-    @Override
-    public void print() {
-        String line = "-".repeat(_size * 4 + 1);
-        System.out.println(line);
-        for (int r = 0; r < _size; r++) {
-            for (int c = 0; c < _size; c++) {
-                System.out.print("| " + _board[r][c] + " ");
-            }
-            System.out.println("|\n" + line);
-        }
-    }
-
-    @Override
-    public void clear() {
-        _positionsTaken = 0;
-        fill();
+        return _positionsTaken == getArea();
     }
 
     @Override
@@ -115,12 +93,24 @@ public class BoardImpl implements Board {
 
     @Override
     public int getArea() {
-        return _size *  _size;
+        return _size * _size;
     }
 
     @Override
-    public int getPositionsTaken() {
-        return _positionsTaken;
+    public String boardToString() {
+        int _size = _board.length;
+        StringBuilder sb = new StringBuilder();
+
+        String line = "-".repeat(_size * 4 + 1);
+        sb.append("\n").append(line);
+        for (int r = 0; r < _size; r++) {
+            sb.append("\n");
+            for (int c = 0; c < _size; c++) {
+                sb.append("| ").append(_board[r][c]).append(" ");
+            }
+            sb.append("|\n").append(line);
+        }
+        return sb.toString();
     }
 
 }

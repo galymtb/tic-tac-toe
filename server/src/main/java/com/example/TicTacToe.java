@@ -1,11 +1,13 @@
 package com.example;
 
-import com.example.game.Game;
 import com.example.server.BaseServer;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 public class TicTacToe {
+
+    // Preload all static (for performance)
+    // public static void load() {}
 
     // TODO:
     // make user to trigger another game (+)
@@ -23,19 +25,17 @@ public class TicTacToe {
     // Dockerize (+)
     // Shadow Containerization (fat jar) (+)
     // Integration tests (+)
-    // Request, response models
+    // Request, response models (+)
     // New APIs (REST and WS) (+)
-
-    // TEST EVERYTHING!
+    // Method refactor (+)
+    // Common handlers (+)
+    // TEST EVERYTHING!!!
 
     private static final Injector _injector = Guice.createInjector(new GameModule());
 
     public static void main(String[] args) {
         BaseServer server = _injector.getInstance(BaseServer.class);
-        try {
-            server.start();
-        } catch (Exception ignore) {
-        }
+        server.start();
     }
 
 }

@@ -2,9 +2,10 @@ package com.example;
 
 import java.io.IOException;
 import java.net.URI;
+import java.time.Duration;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
-import com.example.server.ws.websockets.HelloWebSocket;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.StatusCode;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -16,9 +17,9 @@ import org.eclipse.jetty.websocket.client.WebSocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WebsocketTest {
+public class WebSocketTest {
 
-    private static final Logger _log = LoggerFactory.getLogger(HelloWebSocket.class);
+    private static final Logger _log = LoggerFactory.getLogger(WebSocketTest.class);
 
     @WebSocket
     public static class WebSocketImpl {
@@ -28,19 +29,18 @@ public class WebsocketTest {
         @OnWebSocketConnect
         public void onOpen(Session session) {
             _session = session;
+            session.setIdleTimeout(Duration.ofMinutes(10));
             _log.debug("connected: {}", session.getRemoteAddress());
         }
 
         @OnWebSocketMessage
         public void onMessage(String message, Session session) throws IOException {
-            _log.info("received: " + message);
-            session.getRemote().sendString(message);
+            _log.info("received: {}", message);
         }
 
         @OnWebSocketClose
         public void onClose(Session session) {
             _log.debug("disconnected: {}", session.getRemoteAddress());
-            _session = null;
         }
 
         public Session getSession() {
@@ -67,8 +67,7 @@ public class WebsocketTest {
                 }
                 session.getRemote().sendString(line);
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (Exception ignore) {
         }
     }
 

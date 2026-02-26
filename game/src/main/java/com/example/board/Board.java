@@ -6,28 +6,18 @@ import com.example.result.Result;
 public interface Board {
 
     /**
-     * Prints the board
-     */
-    void print();
-
-    /**
-     * Clears the board
-     */
-    void clear();
-
-    /**
      * Moves player to position
      */
     Result move(int position, Player player);
 
     /**
-     * Get size of the board
+     * Gets area of the board
      */
     int getArea();
 
     /**
-     * Get positions taken
+     * Gets board in String
      */
-    int getPositionsTaken();
+    String boardToString();
 
 }

@@ -2,15 +2,18 @@ package com.example;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.Scanner;
 
 import com.example.server.BaseServer;
 import com.example.server.BaseServerImpl;
-import com.example.server.rest.endpoints.InitEndpoint;
+import com.example.server.handler.BaseHandler;
+import com.example.server.rest.InitEndpoint;
 import com.example.game.Game;
 import com.example.game.GameImpl;
-import com.example.server.rest.endpoints.StepEndpoint;
-import com.example.server.ws.websockets.HelloWebSocket;
+import com.example.server.rest.RestartEndpoint;
+import com.example.server.rest.StatusEndpoint;
+import com.example.server.rest.StepEndpoint;
+import com.example.server.ws.BaseWebSocket;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import com.google.inject.Provides;
@@ -42,6 +45,18 @@ public class GameModule extends AbstractModule {
 
     @Provides
     @Singleton
+    public BaseHandler provideHandler(Game game) {
+        return new BaseHandler(game);
+    }
+
+    @Provides
+    @Singleton
+    public ObjectMapper provideObjectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Provides
+    @Singleton
     public Server provideServer(@Named("SERVER_PORT") String port) {
         return new Server(Integer.parseInt(port));
     }
@@ -58,15 +73,23 @@ public class GameModule extends AbstractModule {
     @Provides
     @Singleton
     @Inject
-    public BaseServer getServer(Server jettyServer, ServletContextHandler context, Game game, @Named("REST_API_PATH") String restPath, @Named("WS_PATH") String wsPath) {
+    public BaseServer getServer(Server jettyServer,
+                                ServletContextHandler context,
+                                BaseHandler handler,
+                                ObjectMapper mapper,
+                                @Named("REST_API_PATH") String restPath,
+                                @Named("WS_PATH") String wsPath) {
+
         BaseServer server = new BaseServerImpl(jettyServer, context);
         // REST
-        server.addEndpoint(new InitEndpoint(game), restPath + "/init");
-        server.addEndpoint(new StepEndpoint(game), restPath + "/step");
+        server.addEndpoint(new InitEndpoint(handler, mapper), restPath + "/init");
+        server.addEndpoint(new StepEndpoint(handler, mapper), restPath + "/step");
+        server.addEndpoint(new StatusEndpoint(handler, mapper), restPath + "/status");
+        server.addEndpoint(new RestartEndpoint(handler, mapper), restPath + "/restart");
 
         // WS
         JettyWebSocketServletContainerInitializer.configure(context, null);
-        server.addEndpoint(new HelloWebSocket(game), wsPath);
+        server.addEndpoint(new BaseWebSocket(handler, mapper), wsPath);
         return server;
     }
 
