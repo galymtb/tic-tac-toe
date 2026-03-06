@@ -4,12 +4,12 @@ import com.example.result.ResultType;
 
 public class GameState {
 
-    String _message;
-    ResultType _result;
-    Character _currentPlayer;
-    String _board;
-    boolean _isInitialized;
-    boolean _isFinished;
+    private String _message;
+    private ResultType _result;
+    private Character _currentPlayer;
+    private String _board;
+    private boolean _isInitialized;
+    private boolean _isFinished;
 
     public GameState(String message, ResultType result, Character currentPlayer, String board, boolean isInitialized, boolean isFinished) {
         _message = message;

@@ -1,4 +1,4 @@
-package com.example.server.controller;
+package com.example.server.transport;
 
 import java.io.IOException;
 import java.util.Map;
@@ -45,4 +45,5 @@ public class WsTransport implements Transport {
     public PlayerType getPlayerType() {
         return PlayerType.WS;
     }
+
 }

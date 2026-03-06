@@ -1,4 +1,4 @@
-package com.example.server.controller;
+package com.example.server.transport;
 
 import java.io.IOException;
 

@@ -3,7 +3,7 @@ package com.example.server.rest;
 import java.io.IOException;
 
 import com.example.server.handler.BaseHandler;
-import com.example.server.controller.RestTransport;
+import com.example.server.transport.RestTransport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

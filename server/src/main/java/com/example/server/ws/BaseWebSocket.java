@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 
 import com.example.server.handler.BaseHandler;
-import com.example.server.controller.WsTransport;
+import com.example.server.transport.WsTransport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;

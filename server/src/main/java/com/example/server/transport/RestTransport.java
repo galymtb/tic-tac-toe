@@ -1,4 +1,4 @@
-package com.example.server.controller;
+package com.example.server.transport;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,9 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class RestTransport implements Transport {
 
-    private final HttpServletRequest _request;
-    private final HttpServletResponse _response;
-    private final ObjectMapper _mapper;
+    protected final HttpServletRequest _request;
+    protected final HttpServletResponse _response;
+    protected final ObjectMapper _mapper;
 
     public RestTransport(HttpServletRequest request, HttpServletResponse response,  ObjectMapper mapper) {
         _request = request;

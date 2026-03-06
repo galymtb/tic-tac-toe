@@ -18,7 +18,7 @@ public class BoardImpl implements Board {
         fill();
     }
 
-    private void fill() {
+    void fill() {
         for (int r = 0; r < _size; r++) {
             for (int c = 0; c < _size; c++) {
                 _board[r][c] = BoardMark.EMPTY.getValue();

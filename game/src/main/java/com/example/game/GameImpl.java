@@ -68,7 +68,7 @@ public class GameImpl implements Game {
         }
         if (_isInitialized) {
             String msg = "Game is already initialized!";
-            return errorState(msg, _currentPlayer == null ? null : _currentPlayer.getName(), _board == null ? null : _board.boardToString());
+            return errorState(msg, _currentPlayer.getName(), _board.boardToString());
         }
 
         _isInitialized = true;

@@ -5,14 +5,14 @@ import java.io.IOException;
 import com.example.board.BoardMark;
 import com.example.game.Game;
 import com.example.game.GameState;
-import com.example.server.controller.Transport;
+import com.example.server.transport.Transport;
 
 public class BaseHandler {
 
     private final Game _game;
 
     public BaseHandler(Game game) {
-        this._game = game;
+        _game = game;
     }
 
     public void init(Transport tx) throws IOException {
@@ -85,4 +85,5 @@ public class BaseHandler {
         GameState state = _game.status();
         tx.sendState(state);
     }
+
 }

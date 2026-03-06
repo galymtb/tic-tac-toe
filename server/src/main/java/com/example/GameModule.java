@@ -72,7 +72,6 @@ public class GameModule extends AbstractModule {
 
     @Provides
     @Singleton
-    @Inject
     public BaseServer getServer(Server jettyServer,
                                 ServletContextHandler context,
                                 BaseHandler handler,
